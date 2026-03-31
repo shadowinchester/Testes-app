@@ -1,0 +1,105 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "Perfil do Usuário",
+      "description": "Dados do usuário e seu papel no sistema (locador ou locatário).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "ID único do Firebase Auth" },
+        "displayName": { "type": "string", "description": "Nome completo" },
+        "email": { "type": "string", "description": "Endereço de e-mail" },
+        "photoURL": { "type": "string", "description": "URL da foto de perfil" },
+        "role": { "type": "string", "enum": ["locador", "locatario"], "description": "Papel do usuário" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email", "role"]
+    },
+    "Equipment": {
+      "title": "Equipamento",
+      "description": "Máquinas de jardinagem disponíveis para aluguel.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "brand": { "type": "string" },
+        "category": { "type": "string" },
+        "pricePerDay": { "type": "number" },
+        "imageUrl": { "type": "string" },
+        "description": { "type": "string" },
+        "ownerId": { "type": "string", "description": "ID do locador proprietário" },
+        "available": { "type": "boolean" }
+      },
+      "required": ["id", "name", "pricePerDay", "ownerId"]
+    },
+    "Booking": {
+      "title": "Reserva",
+      "description": "Agendamento de aluguel de equipamento.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "equipmentId": { "type": "string" },
+        "locatarioId": { "type": "string", "description": "ID do usuário que alugou" },
+        "locadorId": { "type": "string", "description": "ID do proprietário" },
+        "startDate": { "type": "string", "format": "date" },
+        "endDate": { "type": "string", "format": "date" },
+        "totalPrice": { "type": "number" },
+        "status": { "type": "string", "enum": ["confirmed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "reviewed": { "type": "boolean" }
+      },
+      "required": ["id", "equipmentId", "locatarioId", "startDate", "endDate"]
+    },
+    "Notification": {
+      "title": "Notificação",
+      "description": "Alertas para o usuário.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["booking", "system", "review"] },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "message", "type", "read"]
+    },
+    "Review": {
+      "title": "Avaliação",
+      "description": "Comentários e notas de equipamentos.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "equipmentId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "equipmentId", "userId", "rating"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Perfis de usuários."
+    },
+    "/equipment/{equipmentId}": {
+      "schema": "Equipment",
+      "description": "Catálogo de máquinas."
+    },
+    "/bookings/{bookingId}": {
+      "schema": "Booking",
+      "description": "Reservas de aluguel."
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Notificações de usuários."
+    },
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Avaliações de equipamentos."
+    }
+  }
+}
